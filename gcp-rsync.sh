@@ -14,8 +14,9 @@ BUCKETDIR="/NS/lccc-gcp-archive"
 #excludes="-x \".*\.snapshot$|.*\~snapshot$|.*\.bam$|.*\.bai$|.*stdoe\/.*$|.*status\/.*$|.*working\/.*$}\""
 excludes="-x ".*\.snapshot\|.*snapshot\|.*\.bam\|.*\.bai\|.*stdoe\|.*status\|.*working$""
 server_excludes="-x ".*dev\|.*sys\|.*datastore\|.*dbstore\|.*home\|.*mnt\|.*proc\|.*run\|.*webstore$""
-local_excludes="--exclude status --exclude stdoe --exclude working --exclude ~snapshot --exclude .snapshot --exclude *.bam --exclude *.bai" 
+local_excludes="status\|stdoe\|working\|~snapshot\|.snapshot\|.bam\|.bai"
 local_server_excludes="--exclude dev --exclude sys --exclude datastore --exclude dbstore --exclude webstore --exclude home --exclude mnt --exclude proc --exclude run --exclude mkhomes --exclude NS --exclude TPL --exclude smd --exclude state "
+PARALLEL_RSYNC_SCRIPT="/datastore/serverdepot/bin/parallel-gcp-local-rsync.sh"
 
 while getopts ":p:ht:x:e:l" option; do
   case $option in
@@ -45,7 +46,7 @@ fi
 
 #If the user specified an additional exclude with the -e flag, include it.
 if ! [[ $local_exclude_arg == "" ]]; then
-	local_excludes="--exclude status --exclude stdoe --exclude working --exclude ~snapshot --exclude .snapshot --exclude *.bam --exclude *.bai $local_exclude_arg"
+	local_excludes="$local_exclude_arg"
 fi
 
 #Search for '@' in path. If there is an @, consider this a server backup.
@@ -53,6 +54,14 @@ input_path_server="$(echo $input_path | grep "@")"
 
 #Get last character of input path. It needs to end with a '/' for the rsync command.
 input_path_last_char="$(echo "${input_path: -1}")"
+
+#Find if input path has snapshot in name
+input_path_snapshot="$(echo $input_path | grep snapshot)"
+
+#If input path has snapshot in name remove snapshot from excludes
+if ! [[ "$input_path_snapshot" == "" ]]; then
+	local_excludes="status\|stdoe\|working\|.bam\|.bai"
+fi
 
 #Error handling
 #If the input path is empty, exit because we don't know what to rsync.
@@ -141,54 +150,33 @@ SECONDS=0
 if [[ "$local" == "yes" ]]; then
 	#Run rsync to GCP fuse mounted bucket
 	if [[ "$timeout" == "" ]]; then
-		if [[ "$path_filename_last_char" == "*" ]]; then
-			for entry in $rsync_dirs
-			do
-				echo "Running rsync -avz --specials --progress --no-links $local_excludes $entry /NS/lccc-gcp-archive$entry" &>> $OUTPUTDIR/$path/$filename
-				rsync -avz --specials --progress --no-links $local_excludes $entry $BUCKETDIR$entry &>> $OUTPUTDIR/$path/$filename
-				status=$?
-				if ! [[ $status == "0" ]]; then
-					break
-				fi		
-			done
-		else
-			#If not a server backup run if statements. If a server backup run else statements.
-			if [[ "$input_path_server" == "" ]]; then
-				echo "Running rsync -avz --specials --progress --no-links $local_excludes $input_path /NS/lccc-gcp-archive$input_path" &>> $OUTPUTDIR/$path/$filename
-				rsync -avz --specials --progress --no-links $local_excludes $input_path $BUCKETDIR$input_path &>> $OUTPUTDIR/$path/$filename
-				status=$?
-			else
-				#echo "Running rsync -avz --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path" &>> $OUTPUTDIR/$path/$filename
-				echo "Running rsync -avz --specials --progress --no-links $local_server_excludes / $BUCKETDIR/server-backups/$path" &>> $OUTPUTDIR/$path/$filename
-				rsync -avz --specials --progress --no-links $local_server_excludes / $BUCKETDIR/server-backups/$path &>> $OUTPUTDIR/$path/$filename
-				#rsync -avz --specials --progress --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path &>> $OUTPUTDIR/$path/$filename
-				status=$?
-			fi
+		echo "Running $PARALLEL_RSYNC_SCRIPT $input_path $local_excludes" &>> $OUTPUTDIR/$path/$filename
+                $PARALLEL_RSYNC_SCRIPT $input_path $local_excludes &>> $OUTPUTDIR/$path/$filename
+                status=$?
+
+		#If a server backup run below statements.
+		if ! [[ "$input_path_server" == "" ]]; then
+			#echo "Running rsync -avz --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path" &>> $OUTPUTDIR/$path/$filename
+			echo "Running rsync -avz --specials --progress --no-links $local_server_excludes / $BUCKETDIR/server-backups/$path" &>> $OUTPUTDIR/$path/$filename
+			rsync -avz --specials --progress --no-links $local_server_excludes / $BUCKETDIR/server-backups/$path &>> $OUTPUTDIR/$path/$filename
+			#rsync -avz --specials --progress --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path &>> $OUTPUTDIR/$path/$filename
+			status=$?
 		fi
 	#If timeout argument given, run rsync to GCP fuse mounted bucket with timeout
 	else
-		if [[ "$path_filename_last_char" == "*" ]]; then
-			for entry in $rsync_dirs
-                        do
-				echo "Running timeout $timeout rsync -avz --specials --progress --no-links $local_excludes $entry /NS/lccc-gcp-archive$entry" &>> $OUTPUTDIR/$path/$filename
-				timeout $timeout rsync -avz --specials --progress --no-links $local_excludes $entry $BUCKETDIR$entry &>> $OUTPUTDIR/$path/$filename
-				status=$?
-				if ! [[ $status == "0" ]]; then
-					break
-                                fi
-			done
-		else
-			#If not a server backup run if statements. If a server backup run else statements.
-			if [[ "$input_path_server" == "" ]]; then
-				echo "Running timeout $timeout rsync -avz --specials --progress --no-links $local_excludes $input_path /NS/lccc-gcp-archive$input_path" &>> $OUTPUTDIR/$path/$filename
-				timeout $timeout rsync -avz --specials --progress --no-links $local_excludes $input_path $BUCKETDIR$input_path &>> $OUTPUTDIR/$path/$filename
-				status=$?
-			else
-				echo "Running timeout $timeout rsync -avz --specials --progress --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path" &>> $OUTPUTDIR/$path/$filename
-                                timeout $timeout rsync -avz --specials --progress --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path &>> $OUTPUTDIR/$path/$filename
-                                status=$?
-			fi
-		fi
+		echo "Running timeout $timeout $PARALLEL_RSYNC_SCRIPT $input_path $local_excludes" &>> $OUTPUTDIR/$path/$filename
+                timeout $timeout $PARALLEL_RSYNC_SCRIPT $input_path $local_excludes &>> $OUTPUTDIR/$path/$filename
+                status=$?
+
+                #If a server backup run below statements.
+                if ! [[ "$input_path_server" == "" ]]; then
+                        #echo "Running rsync -avz --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path" &>> $OUTPUTDIR/$path/$filename
+                        echo "Running timeout $timeout rsync -avz --specials --progress --no-links $local_server_excludes / $BUCKETDIR/server-backups/$path" &>> $OUTPUTDIR/$path/$filename
+                        timeout $timeout rsync -avz --specials --progress --no-links $local_server_excludes / $BUCKETDIR/server-backups/$path &>> $OUTPUTDIR/$path/$filename
+                        #rsync -avz --specials --progress --no-links $local_server_excludes $input_path $BUCKETDIR/server-backups/$path &>> $OUTPUTDIR/$path/$filename
+                        status=$?
+                fi
+
 	fi
 else
 	#Run rsync to GCP
