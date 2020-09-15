@@ -67,79 +67,81 @@ subdirs_count_depth5="$(echo $subdirs_depth5 | tr ' ' '\n' | wc -l)"
 depth_to_use="5"
 fi
 
+echo "Depth to use: $depth_to_use"
+
 case $depth_to_use in
 	1) 
 	  if [[ "$excludes" == "" ]]; then
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 1 -mindepth 1 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 1 -mindepth 1 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  else
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 1 -mindepth 1 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 1 -mindepth 1 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  fi
 	  ;;
 	2) 
 	  if [[ "$excludes" == "" ]]; then
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  else
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  fi
 	  ;;
 	3)
 	  if [[ "$excludes" == "" ]]; then
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  else
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  fi
 	  ;;
 	4)
 	  if [[ "$excludes" == "" ]]; then
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 4 -mindepth 4 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 4 -mindepth 4 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  else
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 4 -mindepth 4 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 4 -mindepth 4 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  fi
 	  ;;
 	5)
 	  if [[ "$excludes" == "" ]]; then
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 5 -mindepth 5 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 5 -mindepth 5 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 5 -mindepth 5 -type f 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 5 -mindepth 5 -type d 2> /dev/null | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  else
-		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 5 -mindepth 5 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%" "/NS/lccc-gcp-archive/%"
-		  find $path -maxdepth 5 -mindepth 5 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --progress "%/" "/NS/lccc-gcp-archive/%/"
+		  find $path -maxdepth 1 -mindepth 1 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 2 -mindepth 2 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 3 -mindepth 3 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 4 -mindepth 4 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai "%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 5 -mindepth 5 -type f 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *.bai"%" "/NS/lccc-gcp-archive/%"
+		  find $path -maxdepth 5 -mindepth 5 -type d 2> /dev/null | grep -v "$excludes" | xargs -n1 -P10 -I% rsync -avz --specials --progress --no-links --exclude *.bam --exclude *bai "%/" "/NS/lccc-gcp-archive/%/"
 		  exit $?
 	  fi
 	  ;;
