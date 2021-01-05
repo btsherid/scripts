@@ -67,8 +67,6 @@ subdirs_count_depth5="$(echo $subdirs_depth5 | tr ' ' '\n' | wc -l)"
 depth_to_use="5"
 fi
 
-echo "Depth to use: $depth_to_use"
-
 case $depth_to_use in
 	1) 
 	  if [[ "$excludes" == "" ]]; then

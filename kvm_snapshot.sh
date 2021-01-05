@@ -24,7 +24,7 @@ deletion_date_seconds=$(date --date "$deletion_date" +'%s')
  
 for virtualserver in $virtservers
 do
-	#virsh snapshot-create-as --domain $virtualserver --name "cron-snapshot-$date" > /dev/null 2>&1
+	virsh snapshot-create-as --domain $virtualserver --name "cron-snapshot-$date" > /dev/null 2>&1
 	snapshot_dates="$(virsh snapshot-list --domain $virtualserver | tail -n+3 | grep cron-snapshot | awk '{print $1}' |  awk -F '-' '{print $3}' | tr '\n' ' ')"
 	for date in $snapshot_dates	
 	do

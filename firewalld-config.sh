@@ -292,79 +292,79 @@ if [[ "$dockerHost" ]] && [[ "$enable_docker_outside_access" == "yes" ]]; then
         $firewallCmd --permanent --direct --add-rule ipv4 filter INPUT 4 -i docker0 -j ACCEPT >>$RESULTS_FILE
 fi
 
-#Add blacklist configuration
-if [[ "$enableinternalBlacklist" == "yes" ]] || [[ "$enablepublicBlacklist" == "yes" ]]; then
-	#Check if IP blacklist exists. If so, get the entries.
-	if [[ "$($firewallCmd --get-ipsets | grep ipblacklist)" == "" ]]; then
-		currentIPBlacklist=""
+#Add blocklist configuration
+if [[ "$enableinternalBlocklist" == "yes" ]] || [[ "$enablepublicBlocklist" == "yes" ]]; then
+	#Check if IP blocklist exists. If so, get the entries.
+	if [[ "$($firewallCmd --get-ipsets | grep ipblocklist)" == "" ]]; then
+		currentIPBlocklist=""
 	else
-		currentIPBlacklist="$($firewallCmd --ipset=ipblacklist --get-entries)"
+		currentIPBlocklist="$($firewallCmd --ipset=ipblocklist --get-entries)"
 	fi
 
-	#Check if subnet blacklist exists. If so, get the entries.
-	if [[ "$($firewallCmd --get-ipsets | grep netblacklist)" == "" ]]; then
-		currentNetBlacklist=""
+	#Check if subnet blocklist exists. If so, get the entries.
+	if [[ "$($firewallCmd --get-ipsets | grep netblocklist)" == "" ]]; then
+		currentNetBlocklist=""
 	else
-		currentNetBlacklist="$($firewallCmd --ipset=netblacklist --get-entries)"
+		currentNetBlocklist="$($firewallCmd --ipset=netblocklist --get-entries)"
 	fi
 
-	#If IP blacklist not enabled, enable it
-        if [[ "$($firewallCmd --get-ipsets | grep ipblacklist)" == "" ]]; then
-                echo $firewallCmd --permanent --new-ipset=ipblacklist --type=hash:ip >>$RESULTS_FILE
-                $firewallCmd --permanent --new-ipset=ipblacklist --type=hash:ip >>$RESULTS_FILE
+	#If IP blocklist not enabled, enable it
+        if [[ "$($firewallCmd --get-ipsets | grep ipblocklist)" == "" ]]; then
+                echo $firewallCmd --permanent --new-ipset=ipblocklist --type=hash:ip >>$RESULTS_FILE
+                $firewallCmd --permanent --new-ipset=ipblocklist --type=hash:ip >>$RESULTS_FILE
         fi
 
-	#If net blacklist not enabled, enable it
-	if [[ "$($firewallCmd --get-ipsets | grep netblacklist)" == "" ]]; then
-		echo $firewallCmd --permanent --new-ipset=netblacklist --type=hash:net >>$RESULTS_FILE
-                $firewallCmd --permanent --new-ipset=netblacklist --type=hash:net >>$RESULTS_FILE
+	#If net blocklist not enabled, enable it
+	if [[ "$($firewallCmd --get-ipsets | grep netblocklist)" == "" ]]; then
+		echo $firewallCmd --permanent --new-ipset=netblocklist --type=hash:net >>$RESULTS_FILE
+                $firewallCmd --permanent --new-ipset=netblocklist --type=hash:net >>$RESULTS_FILE
 	fi
 
-	#Add rich rule to internal zone for blacklists
-	if [[ "$enableinternalBlacklist" == "yes" ]]; then
-		echo $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=ipblacklist drop' >>$RESULTS_FILE
-	        $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=ipblacklist drop' >>$RESULTS_FILE
-		echo $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=netblacklist drop' >>$RESULTS_FILE
-                $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=netblacklist drop' >>$RESULTS_FILE
-	fi
-	
-	#Add rich rule to public zone for IP blacklist
-	if [[ "$enablepublicBlacklist" == "yes" ]]; then
-		echo $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=ipblacklist drop' >>$RESULTS_FILE
-	        $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=ipblacklist drop' >>$RESULTS_FILE
-		echo $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=netblacklist drop' >>$RESULTS_FILE
-                $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=netblacklist drop' >>$RESULTS_FILE
+	#Add rich rule to internal zone for blocklists
+	if [[ "$enableinternalBlocklist" == "yes" ]]; then
+		echo $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=ipblocklist drop' >>$RESULTS_FILE
+	        $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=ipblocklist drop' >>$RESULTS_FILE
+		echo $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=netblocklist drop' >>$RESULTS_FILE
+                $firewallCmd --permanent --zone=internal --add-rich-rule='rule source ipset=netblocklist drop' >>$RESULTS_FILE
 	fi
 	
-	#Remove entries from IP blacklist if they do not appear in /etc/myfirewalldconfig
-        for ip in $currentIPBlacklist; do
-                if ! [[ $blacklisted_ips == *"$ip"* ]]; then
-                        echo $firewallCmd --permanent --ipset=ipblacklist --remove-entry=$ip >>$RESULTS_FILE
-                        $firewallCmd --permanent  --ipset=ipblacklist --remove-entry=$ip >>$RESULTS_FILE
+	#Add rich rule to public zone for IP blocklist
+	if [[ "$enablepublicBlocklist" == "yes" ]]; then
+		echo $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=ipblocklist drop' >>$RESULTS_FILE
+	        $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=ipblocklist drop' >>$RESULTS_FILE
+		echo $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=netblocklist drop' >>$RESULTS_FILE
+                $firewallCmd --permanent --zone=public --add-rich-rule='rule source ipset=netblocklist drop' >>$RESULTS_FILE
+	fi
+	
+	#Remove entries from IP blocklist if they do not appear in /etc/myfirewalldconfig
+        for ip in $currentIPBlocklist; do
+                if ! [[ $blocked_ips == *"$ip"* ]]; then
+                        echo $firewallCmd --permanent --ipset=ipblocklist --remove-entry=$ip >>$RESULTS_FILE
+                        $firewallCmd --permanent  --ipset=ipblocklist --remove-entry=$ip >>$RESULTS_FILE
                 fi
         done
 
-	#Add IP entries to blacklist from /etc/myfirewalldconfig if they are not already in the blacklist
-        for ip in $blacklisted_ips; do
-                if ! [[ $currentIPBlacklist == *"$ip"* ]]; then
-                        echo $firewallCmd --permanent --ipset=ipblacklist --add-entry=$ip >>$RESULTS_FILE
-                        $firewallCmd --permanent --ipset=ipblacklist --add-entry=$ip >>$RESULTS_FILE
+	#Add IP entries to blocklist from /etc/myfirewalldconfig if they are not already in the blocklist
+        for ip in $blocked_ips; do
+                if ! [[ $currentIPBlocklist == *"$ip"* ]]; then
+                        echo $firewallCmd --permanent --ipset=ipblocklist --add-entry=$ip >>$RESULTS_FILE
+                        $firewallCmd --permanent --ipset=ipblocklist --add-entry=$ip >>$RESULTS_FILE
                 fi
         done
 
-	#Remove entries from subnet blacklist if they do not appear in /etc/myfirewalldconfig
-        for subnet in $currentNetBlacklist; do
-                if ! [[ $blacklisted_subnets == *"$subnet"* ]]; then
-                        echo $firewallCmd --permanent --ipset=netblacklist --remove-entry=$subnet >>$RESULTS_FILE
-                        $firewallCmd --permanent  --ipset=netblacklist --remove-entry=$subnet >>$RESULTS_FILE
+	#Remove entries from subnet blocklist if they do not appear in /etc/myfirewalldconfig
+        for subnet in $currentNetBlocklist; do
+                if ! [[ $blocked_subnets == *"$subnet"* ]]; then
+                        echo $firewallCmd --permanent --ipset=netblocklist --remove-entry=$subnet >>$RESULTS_FILE
+                        $firewallCmd --permanent  --ipset=netblocklist --remove-entry=$subnet >>$RESULTS_FILE
                 fi
         done
 
-	#Add subnet entries to blacklist from /etc/myfirewalldconfig if they are not already in the blacklist
-        for subnet in $blacklisted_subnets; do
-                if ! [[ $currentNetBlacklist == *"$subnet"* ]]; then
-                        echo $firewallCmd --permanent --ipset=netblacklist --add-entry=$subnet >>$RESULTS_FILE
-                        $firewallCmd --permanent --ipset=netblacklist --add-entry=$subnet >>$RESULTS_FILE
+	#Add subnet entries to blocklist from /etc/myfirewalldconfig if they are not already in the blocklist
+        for subnet in $blocked_subnets; do
+                if ! [[ $currentNetBlocklist == *"$subnet"* ]]; then
+                        echo $firewallCmd --permanent --ipset=netblocklist --add-entry=$subnet >>$RESULTS_FILE
+                        $firewallCmd --permanent --ipset=netblocklist --add-entry=$subnet >>$RESULTS_FILE
                 fi
         done
 

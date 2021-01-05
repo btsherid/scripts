@@ -11,29 +11,29 @@
 #		-f  Supply a file with a list of certificates to be checked.
 # Examples:
 #		This will set the warning time to 120 days and leave the critical time at the default 30 days.
-#		check_local_ssl_expirations_nagios.sh -w 120 <path to cert> <path to cert>...
+#		check_local_ssl_expirations.sh -w 120 <path to cert> <path to cert>...
 #
 #		This will set the critical time to 10 days and leave the warning time at the default 60 days.
-#		check_local_ssl_expirations_nagios.sh -c 10 <path to cert> <path to cert>...
+#		check_local_ssl_expirations.sh -c 10 <path to cert> <path to cert>...
 #
 #		This will override the default settings and set the warning time to 30 days and the critical time to 10 days.
-#		check_local_ssl_expirations_nagios.sh -w 30 -c 10 <path to cert> <path to cert>...
+#		check_local_ssl_expirations.sh -w 30 -c 10 <path to cert> <path to cert>...
 #
 #		This will check all of the certs in the supplied file with the default warning and critical times.
-#		check_local_ssl_expirations_nagios.sh -f <path to file with list of certs> 
+#		check_local_ssl_expirations.sh -f <path to file with list of certs> 
 #
 #		This will set the warning time to 120 days and check all of the certs in the supplied file.
 #
-#		check_local_ssl_expirations_nagios.sh -w 120 -f <path to file with list of certs>
+#		check_local_ssl_expirations.sh -w 120 -f <path to file with list of certs>
 #
 #		This will set the critical time to 10 days and check all of the certs in the supplied file.
-#		check_local_ssl_expirations_nagios.sh -c 10 -f <path to file with list of certs>
+#		check_local_ssl_expirations.sh -c 10 -f <path to file with list of certs>
 #
 #		This will override the defaults and check all of the certs in the supplied file.
-#		check_local_ssl_expirations_nagios.sh -w 30 -c 10 -f <path to file with list of certs>
+#		check_local_ssl_expirations.sh -w 30 -c 10 -f <path to file with list of certs>
 #		
 # Sample from /etc/nagios/nrpe.cfg:
-# command[check_local_ssl_expirations_nagios]=/datastore/serverdepot/bin/check_local_ssl_expirations_nagios.sh /var/pkg/ssl/fd285a3ef4ad390b77c3fc085f966a1036044705
+# command[check_local_cert]=/datastore/serverdepot/bin/check_local_ssl_expirations.sh -f /var/pkg/ssl/local_monitored_certs
 #
 ################################
 

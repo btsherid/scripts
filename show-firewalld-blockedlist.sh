@@ -21,5 +21,5 @@ else
 fi
 
 ### Show resulting state
-firewall-cmd --ipset=ipblacklist --get-entries
-firewall-cmd --ipset=netblacklist --get-entries
+firewall-cmd --ipset=ipblocklist --get-entries
+firewall-cmd --ipset=netblocklist --get-entries

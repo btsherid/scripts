@@ -5,8 +5,6 @@ day="$(date +%A)"
 TERM=xterm
 
 export TERM
-echo $date
-echo $day
 
 if [[ "$day" == "Monday" ]]; then
 	script -q -c "/datastore/lbgadmin/ansible/runplaybook-keychain.sh cluster --check --diff" /datastore/lbgadmin/ansible-check-runs/cluster/check-run-${date}
@@ -14,7 +12,7 @@ if [[ "$day" == "Monday" ]]; then
 fi
 
 if [[ "$day" == "Tuesday" ]]; then
-	script -q -c "/datastore/lbgadmin/ansible/runplaybook-keychain.sh icpro --check --diff" /datastore/lbgadmin/ansible-check-runs/icpro/check-run-${date}
+	script -q -c "/datastore/lbgadmin/ansible/runplaybook-keychain.sh development --check --diff" /datastore/lbgadmin/ansible-check-runs/development/check-run-${date}
 fi
 
 if [[ "$day" == "Wednesday" ]]; then
@@ -22,5 +20,5 @@ if [[ "$day" == "Wednesday" ]]; then
 fi
 
 if [[ "$day" == "Thursday" ]]; then
-	script -q -c "/datastore/lbgadmin/ansible/runplaybook-keychain.sh development --check --diff" /datastore/lbgadmin/ansible-check-runs/development/check-run-${date}
+	script -q -c "/datastore/lbgadmin/ansible/runplaybook-keychain.sh icpro --check --diff" /datastore/lbgadmin/ansible-check-runs/icpro/check-run-${date}
 fi
