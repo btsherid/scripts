@@ -37,7 +37,6 @@ for entry in $groups
 do
 
 	member_count=$(getent group $entry | awk -F ':' '{print $4}' | tr ',' '\n' | wc -l)
-	echo $member_count
 	if [[ "$counter" -eq "0" ]]; then
 		output="Group,members\n$entry,$member_count"
 	else	
