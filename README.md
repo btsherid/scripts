@@ -3,9 +3,9 @@ These are scripts I have written over the course of time. Below is a short descr
 
 # Linux Bash Scripts
 
-* ansible-check-runs.sh: This runs an Ansible check (dry) run for Ansible inventories based on the day of the week. Meant to be run via cron every day.
-* ansible-host-counts.sh: Prints a total number of hosts in Ansible as well as a count of hosts per inventory.
-* auditd-alerts-cron.sh: Checks auditd events that ocurred in the last five minutes for certain log files as well as failed logins/authentications. If events are found, it sends an email. Run from cron every five minutes.
+* **ansible-check-runs.sh**: This runs an Ansible check (dry) run for Ansible inventories based on the day of the week. Meant to be run via cron every day.
+* **ansible-host-counts.sh**': Prints a total number of hosts in Ansible as well as a count of hosts per inventory.
+* **auditd-alerts-cron.sh**: Checks auditd events that ocurred in the last five minutes for certain log files as well as failed logins/authentications. If events are found, it sends an email. Run from cron every five minutes.
 * auditd-alerts.sh
 * cert_info.sh
 * check_argument_services.sh
