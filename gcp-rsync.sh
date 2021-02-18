@@ -9,6 +9,8 @@ fi
 #export TMPDIR=""
 timeout=""
 date="$(date +%Y-%m-%d-%H%M%S)"
+today="$(date +%m-%d-%Y)"
+today_weekly="$(date +%Y-%m-%d)"
 OUTPUTDIR="/datastore/serverdepot/netbackup/gcp-rsync-logs"
 BUCKETDIR="/NS/lccc-gcp-archive"
 #excludes="-x ".*\.snapshot\|.*snapshot\|.*\.bam\|.*\.bai\|.*stdoe\|.*status\|.*working$""
@@ -99,11 +101,11 @@ if [[ "$input_path_server" == "" ]]; then
 #		path="$(echo "${path_filename::-1}")"
 		path="${path_filename//'*'}"
 		rsync_dirs="$(ls -d $input_path)"
-	elif [[ "$input_path" == *"3_esxlinux"* ]] || [[ "$input_path" == *"3_kvm"* ]] || [[ "$input_path" == *"esx_<redacted>"* ]]; then
-		snapshot_folder="$(ls $input_path | grep weekly | head -n 1)"
-	        snapshot_path="$(echo $input_path | awk -F '.snapshot/' '{print $1}')"
+	elif [[ "$input_path" == *"snapshot"* ]]; then
+		snapshot_folder="$(ls $input_path | grep "VLAN452\|weekly\|Windows" | grep "$today\|$today_weekly")"
+		snapshot_path="$(echo $input_path | awk -F '.snapshot/' '{print $1}')"
 		snapshot_path_filename="$(echo "${snapshot_path:1:${#snapshot_path}-2}" | tr '/' '_')"
-        	path="${snapshot_path_filename}_.snapshot/${path_filename}_${snapshot_folder}"
+	        path="${snapshot_path_filename}_.snapshot/${path_filename}_${snapshot_folder}"
 	else
 		path="$path_filename"
 	fi
@@ -113,7 +115,7 @@ else
 fi
 
 #The filename is $path_filename with $date appended
-if [[ "$input_path" == *"3_esxlinux"* ]] || [[ "$input_path" == *"3_kvm"* ]] || [[ "$input_path" == *"esx_<redacted>"* ]]; then
+if [[ "$input_path" == *"snapshot"* ]]; then
 	filename="$date"
 else
 	filename="${path}_$date"
@@ -161,7 +163,7 @@ if [[ "$local" == "yes" ]]; then
 					break
 				fi		
 			done
-		elif [[ "$input_path" == *"3_esxlinux"* ]] || [[ "$input_path" == *"3_kvm"* ]] || [[ "$input_path" == *"esx_<redacted>"* ]]; then
+		elif [[ "$input_path" == *"snapshot"* ]]; then
 			echo "Running rsync -avz --progress --no-links $local_excludes ${input_path}${snapshot_folder} $BUCKETDIR${input_path}${snapshot_folder}" &>> $OUTPUTDIR/$path/$filename
                         rsync -avz --progress --no-links $local_excludes ${input_path}${snapshot_folder} $BUCKETDIR${input_path}${snapshot_folder}  &>> $OUTPUTDIR/$path/$filename
                         status=$?
@@ -190,7 +192,7 @@ if [[ "$local" == "yes" ]]; then
 					break
                                 fi
 			done
-                elif [[ "$input_path" == *"3_esxlinux"* ]] || [[ "$input_path" == *"3_kvm"* ]] || [[ "$input_path" == *"esx_<redacted>"* ]]; then
+                elif [[ "$input_path" == *"snapshot"* ]]; then
                         echo "Running timeout $timeout rsync -avz --progress --no-links $local_excludes ${input_path}${snapshot_folder} $BUCKETDIR${input_path}${snapshot_folder}" &>> $OUTPUTDIR/$path/$filename
                         timeout $timeout rsync -avz --progress --no-links $local_excludes ${input_path}${snapshot_folder} $BUCKETDIR${input_path}${snapshot_folder}  &>> $OUTPUTDIR/$path/$filename
                         status=$?
@@ -221,7 +223,7 @@ else
                                         break
                                 fi
 			done
-                elif [[ "$input_path" == *"3_esxlinux"* ]] || [[ "$input_path" == *"3_kvm"* ]] || [[ "$input_path" == *"esx_<redacted>"* ]]; then
+                elif [[ "$input_path" == *"snapshot"* ]]; then
                         echo "Running gsutil -m rsync -r -e -C "$excludes" ${input_path}${snapshot_folder} gs://lccc-gcp-archive${input_path}${snapshot_folder}" &>> $OUTPUTDIR/$path/$filename
                         gsutil -m rsync -r -e -C "$excludes" ${input_path}${snapshot_folder} gs://lccc-gcp-archive${input_path}${snapshot_folder} &>> $OUTPUTDIR/$path/$filename
                         status=$?
@@ -242,7 +244,7 @@ else
                                         break
                                 fi
 			done
-		elif [[ "$input_path" == *"3_esxlinux"* ]] || [[ "$input_path" == *"3_kvm"* ]] || [[ "$input_path" == *"esx_<redacted>"* ]]; then
+		elif [[ "$input_path" == *"snapshot"* ]]; then
                 	echo "Running timeout $timeout gsutil -m rsync -r -e -C "$excludes" ${input_path}${snapshot_folder} gs://lccc-gcp-archive${input_path}${snapshot_folder}" &>> $OUTPUTDIR/$path/$filename
 	               	timeout $timeout gsutil -m rsync -r -e -C "$excludes" ${input_path}${snapshot_folder} gs://lccc-gcp-archive${input_path}${snapshot_folder} &>> $OUTPUTDIR/$path/$filename
                 	status=$?
@@ -266,7 +268,7 @@ if [[ "$status" == "124" ]]; then
 elif ! [[ "$status" == "0" ]]; then
 	echo -e "GCP rsync for $input_path started $start_time on $HOSTNAME exited with return code $status\n\nLog file is located at $OUTPUTDIR/$path/$filename" | mail -s "GCP Rsync error" brendan.sheridan@unc.edu
 else
-	echo -e "GCP rsync for $input_path started $start_time on $HOSTNAME finished successfully in $(($duration / 60 / 60)) hours $(($duration / 60 %60)) minutes and $(($duration % 60)) seconds\n\nLog file is located at $OUTPUTDIR/$path/$filename" | mail -s "GCP Rsync completion" <my email address>
+	echo -e "GCP rsync for $input_path started $start_time on $HOSTNAME finished successfully in $(($duration / 60 / 60)) hours $(($duration / 60 %60)) minutes and $(($duration % 60)) seconds\n\nLog file is located at $OUTPUTDIR/$path/$filename" | mail -s "GCP Rsync completion" brendan.sheridan@unc.edu
 fi
  
 
