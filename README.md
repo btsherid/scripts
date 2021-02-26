@@ -20,7 +20,12 @@ These are scripts I have written over the course of time. Below is a short descr
 * **check_tomcatx_catalina_dir.sh**: Nagios check to alert if files under /var/cache/tomcat/work/Catalina/ are not owned by the proper user.
 * **check_tomcatx_logs.sh**: Nagios check to alert if files under /var/log/tomcat/ are not owned by the proper user.
 * **check_tomcatx.sh**: Nagios check to alert if systemd service User is not correct.
+* **clustercores.sh**: Prints out statistic information about core availability in a SLURM HPC cluster.
 * **cluster-maintenance.sh**: Helper script for maintenance on SLURM cluster. Will set all partitions down and suspend all jobs for maintenance start and set all partitions up and resume all jobs for maintenance end.
+* **cluster_memory.sh**: Prints out statistic information about memory usage in a SLURM HPC cluster.
+* **cluster_memory_cron.sh**: Gets information about memory usage in a SLURM HPC cluster. cluster_memory.sh uses the output file from this script.
+* **cluster_node_availability.sh**: Prints out statistic information about node availability in a SLURM HPC cluster.
+* **cluster_node_availability_totals.sh**: Prints out statistic information about node availability totals in a SLURM HPC cluster.
 * **contact-group-owners.sh**: Gets a list of all groups in "lab" in the name from LDAP. Then gets a list of all user accounts in that group. Then emails the group owner (based on note in LDAP description field) asking them to confirm the accuracy of the group membership.
 * **csr_info.sh**: Wrapper around openssl command to print out CSR information.
 * **fastqs-to-gcp-inputfile.sh**: Takes a list of files from a user defined input file and copies them to GCP in directories that match the input file path.

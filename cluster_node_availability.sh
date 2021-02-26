@@ -5,7 +5,7 @@ sinfo --all --long -N -o "%N,%T,%125E" | sort -u> ~/sinfo_output
 total_cluster_nodes="$(awk '{print $1}' $CLUSTER_FILE | wc -l)"
 total_nodes_available="$(awk -F ',' '{print $2}' ~/sinfo_output | grep "allocated\|completing\|idle\|mixed" | wc -l)"
 percentage="$(echo "($total_nodes_available/$total_cluster_nodes) * 100" | bc -l | xargs printf "%.2f")"
-headers="Node Name,Node State,Reason Node Not Available"
+headers="Node Name,Node SLURM State,Reason Node Not Available"
 output=""
 while read -r line;
 do
