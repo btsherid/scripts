@@ -21,6 +21,8 @@ These are scripts I have written over the course of time. Below is a short descr
 * **check_tomcatx_logs.sh**: Nagios check to alert if files under /var/log/tomcat/ are not owned by the proper user.
 * **check_tomcatx.sh**: Nagios check to alert if systemd service User is not correct.
 * **clustercores.sh**: Prints out statistic information about core availability in a SLURM HPC cluster.
+* **cluster-job-totals.sh**: Parses an output file to display username and number of cluster jobs run. Either looks for a user specified month from the output file or by default the entire output file.
+* **cluster-job-totals_cron.sh**: Generates the output files for cluster-job-totals.sh on a set schedule. Runs every 5 minutes via cron but some files get updated less frequently based on logic in the script.
 * **cluster-maintenance.sh**: Helper script for maintenance on SLURM cluster. Will set all partitions down and suspend all jobs for maintenance start and set all partitions up and resume all jobs for maintenance end.
 * **cluster_memory.sh**: Prints out statistic information about memory usage in a SLURM HPC cluster.
 * **cluster_memory_cron.sh**: Gets information about memory usage in a SLURM HPC cluster. cluster_memory.sh uses the output file from this script.
