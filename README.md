@@ -15,6 +15,7 @@ These are scripts I have written over the course of time. Below is a short descr
 * **check_gpu_power.sh**: Nagios check to alert if power draw on NVIDIA GPU card becomes too high.
 * **check_gpu_temp.sh**: Nagios check to alert if temperature on NVIDIA GPU card becomes too high.
 * **check_local_ssl_expirations.sh**: Nagios check to check expiration dates of SSL certificates on local file system. Accepts flags for custom warning and critical times and reading in multiple certifcates from a list in a file.
+* **check_remote_proc_usage_solaris.sh**: Nagios check to alert if a process is using a lot of CPU. Only works on Solaris because of behavior of the top command.
 * **check_scratch_tapes.sh**: Nagios check to alert if empty (scratch) magnetic backup tapes are running low.
 * **check_tomcat_logs.sh**: Nagios check to alert if /var/log/tomcat/ is not owned by the proper group.
 * **check_tomcatx_catalina_dir.sh**: Nagios check to alert if files under /var/cache/tomcat/work/Catalina/ are not owned by the proper user.
