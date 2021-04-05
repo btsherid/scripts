@@ -1,6 +1,6 @@
 #!/bin/bash
 year=$(date +"%Y")
-new_key_file="/datastore/serverdepot/certs/any.<redacted>-${year}.key"
+new_key_file="/datastore/serverdepot/certs/keys/any.<redacted>-${year}.key"
 new_cert_file="/datastore/serverdepot/certs/any.<redacted>_cert-${year}.cer"
 new_interm_file="/datastore/serverdepot/certs/any.<redacted>_interm-${year}.cer"
 key_file="$((sudo ls -la /etc/pki/tls/private/any.<redacted>-*.key | grep "cannot access") 2>&1)"
@@ -28,7 +28,7 @@ fi
 
 #Test if new key file exists with desired name
 if [ ! -f "$new_key_file" ]; then
-	echo "ERROR: New key file does not exist at /datastore/serverdepot/certs/any.<redacted>-${year}.key"
+	echo "ERROR: New key file does not exist at /datastore/serverdepot/certs/keys/any.<redacted>-${year}.key"
 	exit 1
 fi
 
@@ -95,7 +95,7 @@ if [ ! $key_sym_link_count -eq 1 ]; then
         exit 1
 fi
 
-sudo cp /datastore/serverdepot/certs/any.<redacted>-${year}.key /etc/pki/tls/private
+sudo cp /datastore/serverdepot/certs/keys/any.<redacted>-${year}.key /etc/pki/tls/private
 sudo rm /etc/pki/tls/private/${key_sym_link_name} 
 cd /etc/pki/tls/private
 sudo ln -s any.<redacted>-${year}.key $key_sym_link_name
