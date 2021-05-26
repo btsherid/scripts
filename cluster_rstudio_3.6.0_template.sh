@@ -8,6 +8,7 @@
 #SBATCH --output /datastore/scratch/users/<ONYEN>/%j.out
 #SBATCH --error  /datastore/scratch/users/<ONYEN>/%j.error
 #***The job will automatically be killed after this amount of time. This template defaults to 8 hours***
+#***Format is days-hours:minutes:seconds***
 #SBATCH --time=0-08:00:00
 
 is_port_free(){
