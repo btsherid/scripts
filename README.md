@@ -21,6 +21,8 @@ These are scripts I have written over the course of time. Below is a short descr
 * **check_tomcatx_catalina_dir.sh**: Nagios check to alert if files under /var/cache/tomcat/work/Catalina/ are not owned by the proper user.
 * **check_tomcatx_logs.sh**: Nagios check to alert if files under /var/log/tomcat/ are not owned by the proper user.
 * **check_tomcatx.sh**: Nagios check to alert if systemd service User is not correct.
+* **cluster_rstudio_3.6.0_template.sh**: Template script for running a RStudio 3.6.0 server on a SLURM HPC cluster with Open OnDemand.
+* **cluster_rstudio_4.0.3_template.sh**: Template script for running a RStudio 4.0.3 server on a SLURM HPC cluster with Open OnDemand.
 * **clustercores.sh**: Prints out statistic information about core availability in a SLURM HPC cluster.
 * **cluster-job-totals.sh**: Parses an output file to display username and number of cluster jobs run. Either looks for a user specified month from the output file or by default the entire output file.
 * **cluster-job-totals_cron.sh**: Generates the output files for cluster-job-totals.sh on a set schedule. Runs every 5 minutes via cron but some files get updated less frequently based on logic in the script.
