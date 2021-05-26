@@ -1,10 +1,14 @@
-#!/bin/bash 
+#!/bin/bash
 #SBATCH --job-name <ONYEN>-rstudio403
+#***Number of CPUS requested***
 #SBATCH --cpus-per-task 1
+#***The --mem flag requests a node with at least this much memory (in GB)***
 #SBATCH --mem 2
 #SBATCH --partition allnodes
 #SBATCH --output /datastore/scratch/users/<ONYEN>/%j.out
 #SBATCH --error  /datastore/scratch/users/<ONYEN>/%j.error
+#***The job will automatically be killed after this amount of time. This template defaults to 8 hours***
+#SBATCH --time=0-08:00:00
 
 is_port_free(){
   port="$1"
