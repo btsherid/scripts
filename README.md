@@ -79,6 +79,7 @@ These are scripts I have written over the course of time. Below is a short descr
 * **start-clusterrstudio2.sh**: Starts a singularity container via a SLURM job that runs a web app.
 * **start-clusterrstudio.sh**: Starts a singularity container via a SLURM job that runs a web app.
 * **tableau-backup.sh**: Takes a backup of a Tableau server. Runs via cron every day.
+* **tpl-login-report.sh**: Script intended for cron to automate generating a report every month.
 * **uninstall-netbackup-client.sh**: Performs necessary actions to uninstall the NetBackup client.
 * **uninstall-rclone.sh**: Performs necessary actions to uninstall rclone.
 * **unitservices-space_used_update.sh**: - Updates a mediawiki page for storage space used by groups. Runs from cron every day.
