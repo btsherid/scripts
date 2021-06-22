@@ -2,8 +2,8 @@
 #SBATCH --job-name <ONYEN>-rstudio403
 #***Number of CPUS requested***
 #SBATCH --cpus-per-task 1
-#***The --mem flag requests a node with at least this much memory (in GB)***
-#SBATCH --mem 2
+#***The --mem flag requests a node with at least this much memory***
+#SBATCH --mem 2G
 #SBATCH --partition allnodes
 #SBATCH --output /datastore/scratch/users/<ONYEN>/%j.out
 #SBATCH --error  /datastore/scratch/users/<ONYEN>/%j.error
