@@ -74,6 +74,7 @@ These are scripts I have written over the course of time. Below is a short descr
 * **sf_search_extension_all_volumes.sh**: Uses Starfish software to search for all files with a given extension across volumes of interest. Also does post processing of output file.
 * **sf_search_fastq_fq_all_volumes.sh**: Uses Starfish software to search for all .fastq/.fq files with a given extension across volumes of interest. Also does post processing of output file and idenfitifcation of deletable files.
 * **sf_search_group_files_all_volumes.sh**: Uses Starfish software to search for all files owned by a given group across volumes of interest. Also does post processing of output file.
+* **sf_search_user_files_all_volumes.sh**: Uses Starfish software to search for all files owned by a given user across volumes of interest. Also does post processing of output file.
 * **show-firewalld-blockedlist.sh**: Prints out the firewalld blocked list.
 * **start-clusterrstudio1.sh**: Starts a singularity container via a SLURM job that runs a web app.
 * **start-clusterrstudio2.sh**: Starts a singularity container via a SLURM job that runs a web app.
