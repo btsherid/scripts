@@ -1,4 +1,10 @@
 #!/bin/bash
+## check if running as root
+if [[ "$EUID" -ne 0 ]]; then
+        echo "Error: Must be run as root." >&2
+        exit 1
+fi
+
 volumes="alldata clustersysshare home1 home2 home3 home4 mapseq-analysis nextgenout2 nextgenout3 nextgenout4 nextgenout5 peroulab seqdata seqdata_hosp seqware-analysis"
 ext="$1"
 out_file="/tmp/$1.uncompressed"

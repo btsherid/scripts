@@ -1,4 +1,10 @@
 #!/bin/bash
+## check if running as root
+if [[ "$EUID" -ne 0 ]]; then
+        echo "Error: Must be run as root." >&2
+        exit 1
+fi
+
 
 #These are the volumes we want to search
 volumes="alldata clustersysshare home1 home2 home3 home4 mapseq-analysis nextgenout2 nextgenout3 nextgenout4 nextgenout5 peroulab seqdata seqdata_hosp seqware-analysis"
@@ -96,9 +102,9 @@ if test -f "${out_file}.exists"; then
 
 	echo
 	echo "*****Extracting fastq and fq files in working directories to a different file*****"
-	grep "/working/\|/work/" $out_file > ${out_file}_working_total
+	grep "/working/\|/work/\|/nextflow-work/" $out_file > ${out_file}_working_total
 
-	grep -v "/working/\|/work/" $out_file > ${out_file}.1
+	grep -v "/working/\|/work/\|/nextflow-work/" $out_file > ${out_file}.1
 	mv ${out_file}.1 ${out_file}
 
 	echo
