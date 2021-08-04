@@ -211,8 +211,10 @@ if test -f "${out_file}.exists"; then
         	fi
 
 	done < $out_file
-	rm $out_file
-	mv ${out_file}_converted $out_file
+	if test -f "${out_file}_converted"; then
+		rm $out_file
+		mv ${out_file}_converted $out_file
+	fi
 
 	echo
 	echo "*****Converting timestamps to human readable dates for files inside working dirs*****"

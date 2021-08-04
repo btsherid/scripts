@@ -12,6 +12,7 @@ These are scripts I have written over the course of time. Below is a short descr
 * **check_cluster_scratch.sh**: Nagios check to check if multiple hosts can access a NFS mount. If any host times out, it returns warning to Nagios. If any host cannot access, it returns critical to Nagios.
 * **check_cluster.sh**: Nagios check to check the state of all SLURM cluster nodes. If any nodes are in a drained or draining state, it returns warning to Nagios. If any nodes are down it returns critical to Nagios.
 * **check_cluster_tmp.sh**: Nagios check to check the space usage of /tmp on multiple hosts. If any host times out, it returns warning to Nagios. If any host has higher than 75% usage on /tmp, it returns critical to Nagios.
+* **check_duplicates_size.sh**: Nagios check to check the total size of duplicate files across the storage. If the value is higher than 10TB it returns warning to Nagios. If the value is higher than 20TB it returns critical to Nagios.
 * **check_gpu_power.sh**: Nagios check to alert if power draw on NVIDIA GPU card becomes too high.
 * **check_gpu_temp.sh**: Nagios check to alert if temperature on NVIDIA GPU card becomes too high.
 * **check_local_ssl_expirations.sh**: Nagios check to check expiration dates of SSL certificates on local file system. Accepts flags for custom warning and critical times and reading in multiple certifcates from a list in a file.
